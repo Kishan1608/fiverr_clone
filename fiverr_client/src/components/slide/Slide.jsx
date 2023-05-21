@@ -2,10 +2,8 @@ import React from 'react'
 import './Slide.scss'
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import { cards } from '../../data';
-import CatCard from '../catCard/CatCard';
 
-const Slide = ({children}) => {
+const Slide = ({children, center, infi}) => {
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
@@ -27,8 +25,8 @@ const Slide = ({children}) => {
     <div className="slide">
         <div className="container">
             <Carousel responsive={responsive}
-            infinite={true}
-            centerMode={true}
+            infinite={infi}
+            centerMode={center}
             >
               {children}
             </Carousel> 

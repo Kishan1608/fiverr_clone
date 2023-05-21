@@ -12,7 +12,7 @@ const Home = () => {
     <div className='home'>
       <Featured />
       <TrustedBy />
-      <Slide>
+      <Slide infi={true} center={true}>
         {cards.map(card=> {
           return <CatCard key={card.id} item={card}/>
         })}
@@ -89,7 +89,7 @@ const Home = () => {
         </div>
       </div>
 
-      <Slide>
+      <Slide infi={true} center={true}>
         {projects.map(card=> {
           return <ProjectCard key={card.id} item={card}/>
         })}
