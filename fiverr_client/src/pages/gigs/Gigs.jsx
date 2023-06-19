@@ -1,16 +1,40 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './Gigs.scss'
 import GigCard from '../../components/gigCard/GigCard';
-import {gigs} from '../../data';
+import { useQuery } from '@tanstack/react-query';
+import newRequest from '../../utils/newRequest';
+import { useLocation } from 'react-router-dom';
 
 const Gigs = () => {
   const[open, setOpen] = useState(false);
   const[sort, setSort] = useState("sales");
+  const minRef = useRef();
+  const maxRef = useRef();
 
   const reSort = (type) => {
     setSort(type);
     setOpen(false);
   }
+
+  useEffect(() => {
+    refetch();
+  },[sort])
+
+  const {search} = useLocation();
+
+  const { isLoading, error, data, refetch } = useQuery({
+    queryKey: ['gigs'],
+    queryFn: () =>
+      newRequest.get(`/gigs${search}&min=${minRef.current.value}&max=${maxRef.current.value}&sort=${sort}`).then((res) => {
+        return res.data;
+      })
+  })
+
+  const apply = () => {
+    refetch();
+  }
+  
+  
   return (
     <div className='gigs'>
       <div className="container">
@@ -22,9 +46,9 @@ const Gigs = () => {
         <div className="menu">
           <div className="left">
             <span>Budget</span>
-            <input type="text" placeholder='min'/>
-            <input type="text" placeholder='max'/>
-            <button>Apply</button>
+            <input ref={minRef} type="number" placeholder='min'/>
+            <input ref={maxRef} type="number" placeholder='max'/>
+            <button onClick={apply}>Apply</button>
           </div>
           <div className="right">
             <span className='sortby'>SortBy</span>
@@ -43,9 +67,12 @@ const Gigs = () => {
         </div>
 
         <div className="cards">
-          {
-            gigs.map(gig => {
-              return <GigCard key={gig.id} item={gig}/>
+          { isLoading 
+            ? "Loading..." 
+            : error 
+            ? "Something Went Wrong!!!" 
+            : data.map(gig => {
+              return <GigCard key={gig._id} item={gig}/>
             })
           }
         </div>

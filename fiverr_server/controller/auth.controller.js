@@ -6,6 +6,9 @@ import createError from '../utils/createError.js';
 export const register = async(req, res, next) => {
     const hashPassword = bcrypt.hashSync(req.body.password, 10);
     try {
+        const user = await User.findOne({username: req.body.username});
+
+        if(user) return next(createError(404, "User Already Exist!!!"));
         const newUser = new User({
             ...req.body,
             password: hashPassword,
