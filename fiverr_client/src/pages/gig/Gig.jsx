@@ -20,12 +20,15 @@ const Gig = () => {
       })
   })
 
+  const userId = data?.userId;
+
   const { isLoading: isLoadingUser, error: errorUser, data: dataUser } = useQuery({
     queryKey: ['user'],
     queryFn: () =>
-      newRequest.get(`/users/${data.userId}`).then((res) => {
+      newRequest.get(`/users/${userId}`).then((res) => {
         return res.data;
-      })
+      }),
+      enabled: !!userId
   })
 
   return (
@@ -184,11 +187,11 @@ const Gig = () => {
           <div className="details">
             <div className="item">
               <img src="/img/clock.png" alt="" />
-              <span>{data.deliveryDate}</span>
+              <span>{data.deliveryTime} Days Delivery</span>
             </div>
             <div className="item">
               <img src="/img/recycle.png" alt="" />
-              <span>{data.revisionNumber}</span>
+              <span>{data.revisionNumber} Revision</span>
             </div>
           </div>
           <div className="features">
@@ -196,7 +199,7 @@ const Gig = () => {
               return (
               <div className="item" key={feature}>
                 <img src="/img/greencheck.png" alt="" />
-                <span>Prompt writing</span>
+                <span>{feature}</span>
               </div>
               )
             })}

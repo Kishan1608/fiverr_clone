@@ -1,73 +1,76 @@
 import React from 'react'
 import './Messages.scss';
 import { Link } from 'react-router-dom';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import newRequest from '../../utils/newRequest';
+import moment from 'moment'
 
 const Messages = () => {
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-  const message = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, officia inventore laudantium itaque at ipsam ipsa reiciendis provident, culpa voluptatibus voluptate suscipit deserunt, esse fugit vitae ea necessitatibus nisi autem.'
+  const { isLoading, error, data } = useQuery({
+    queryKey: ['conversations'],
+    queryFn: () =>
+      newRequest.get(`/conversation`).then((res) => {
+        return res.data;
+      })
+  })
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (id) => {
+        return newRequest.put(`/conversation/${id}`)
+    },
+    
+    onSuccess:() => {
+        queryClient.invalidateQueries(["conversations"])
+    }
+  })
+
+  const handleRead  = (id) => {
+    mutation.mutate(id);
+  }
+
   return (
     <div className='messages'>
-      <div className="container">
+      {isLoading 
+      ? "Loading..."
+      : error
+      ? "Something Went Wrong!!!"
+      :<div className="container">
         <div className="title">
           <h1>Messages</h1>
         </div>
         <table>
           <tr>
-            <th>Buyer</th>
+            <th>{currentUser.isSeller ? "Buyer" : "Seller"}</th>
             <th>Last Message</th>
             <th>Date</th>
             <th>Action</th>
           </tr>
-          <tr className='active'>
-            <td>
-              Jhon Doe
-            </td>
-            <td><Link to="/message/123" className='link'>{message.substring(0,100)}...</Link></td>
-            <td>1 day ago</td>
-            <td>
-              <button>Mark as read</button>
-            </td>
-          </tr>
-          <tr className='active'>
-            <td>
-              Jhon Doe
-            </td>
-            <td><Link to="/message/123" className='link'>{message.substring(0,100)}...</Link></td>
-            <td>1 day ago</td>
-            <td>
-              <button>Mark as read</button>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Jhon Doe
-            </td>
-            <td><Link to="/message/123" className='link'>{message.substring(0,100)}...</Link></td>
-            <td>1 day ago</td>
-          </tr>
-          <tr>
-            <td>
-              Jhon Doe
-            </td>
-            <td><Link to="/message/123" className='link'>{message.substring(0,100)}...</Link></td>
-            <td>1 day ago</td>
-          </tr>
-          <tr>
-            <td>
-              Jhon Doe
-            </td>
-            <td><Link to="/message/123" className='link'>{message.substring(0,100)}...</Link></td>
-            <td>1 day ago</td>
-          </tr>
-          <tr>
-            <td>
-              Jhon Doe
-            </td>
-            <td><Link to="/message/123" className='link'>{message.substring(0,100)}</Link></td>
-            <td>1 day ago</td>
-          </tr>
+          {
+            data.map(c=> {
+              return <tr className={((currentUser.isSeller && !c.readBySeller) || (!currentUser.isSeller && !c.readByBuyer)) && "active"} key={c.id}>
+                <td>
+                  {currentUser.isSeller ? c.buyerId : c.sellerId}
+                </td>
+                <td><Link to={`/message/${c.id}`} className='link'>{c?.lastMessage?.substring(0,100)}...</Link></td>
+                <td>{moment(c.updatedAt).fromNow()}</td>
+                <td>
+                  {((currentUser.isSeller && !c.readBySeller) ||
+                    (!currentUser.isSeller && !c.readByBuyer)) && (
+                    <button onClick={() => handleRead(c.id)}>
+                      Mark as Read
+                    </button>
+                  )}
+                </td>
+              </tr>
+            })
+          }
+          
         </table>
-      </div>
+      </div>}
     </div>
   )
 }

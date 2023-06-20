@@ -6,7 +6,7 @@ import newRequest from '../../utils/newRequest';
 const Review = ({review}) => {
 
     const { isLoading, error, data } = useQuery({
-        queryKey: ['reviewUser'],
+        queryKey: [review.userId],
         queryFn: () =>
             newRequest.get(`/users/${review.userId}`).then((res) => {
             return res.data;
@@ -30,14 +30,14 @@ const Review = ({review}) => {
                     </div>
                 </div>
             }
-            {!isNaN(review.totalStars / review.starNumber) && (
+            {
                 <div className="stars">
-                {Array(Math.round(review.totalStars / review.starNumber)).fill().map((item, i) => {
+                {Array(review.star).fill().map((item, i) => {
                     return <img src="/img/star.png" alt="" key={i}/>
                 })}
-                <span>{Math.round(review.totalStars / review.starNumber)}</span>
                 </div>
-            )}
+            }
+            
             <p>
                 {review.desc}
             </p>
