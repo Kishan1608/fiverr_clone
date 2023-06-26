@@ -3,9 +3,10 @@ import './Orders.scss';
 import newRequest from '../../utils/newRequest';
 import { useQuery } from '@tanstack/react-query';
 import {useNavigate} from 'react-router-dom';
+import { getCurrentUser } from '../../utils/getCurrentUser';
 
 const Orders = () => {
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const currentUser = getCurrentUser();
 
   const navigate = useNavigate();
 
@@ -43,29 +44,32 @@ const Orders = () => {
           <h1>Orders</h1>
         </div>
         <table>
-          <tr>
-            <th>Image</th>
-            <th>Title</th>
-            <th>Price</th>
-            <th>Contact</th>
-          </tr>
-          {data.map((order) => {
-            
-          return <tr key={order._id}>
-            <td>
-              <img
-                className="image"
-                src={order.img}
-                alt=""
-              />
-            </td>
-            <td>{order.title}</td>
-            <td>{order.price}</td>
-            <td>
-              <img className="delete" src="./img/message.png" alt="" onClick={() => handleContact(order)}/>
-            </td>
-          </tr>})
-          }
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Title</th>
+              <th>Price</th>
+              <th>Contact</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((order) => {           
+              return <tr key={order._id}>
+              <td>
+                <img
+                  className="image"
+                  src={order.img}
+                  alt=""
+                  />
+              </td>
+              <td>{order.title}</td>
+              <td>{order.price}</td>
+              <td>
+                <img className="delete" src="./img/message.png" alt="" onClick={() => handleContact(order)}/>
+              </td>
+            </tr>})
+            }
+          </tbody>
           
         </table>
       </div>)}

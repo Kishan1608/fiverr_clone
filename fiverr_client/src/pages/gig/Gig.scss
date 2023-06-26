@@ -210,15 +210,19 @@
                 }
             }
 
-            button{
-                background-color: #1dbf73;
-                padding: 10px;
-                border: none;
-                color: white;
-                font-weight: 500;
-                font-size: 18px;
-                cursor: pointer;
-                border-radius: 5px;
+            .link{
+
+                .btn-continue{
+                    width: 100%;
+                    background-color: #1dbf73;
+                    padding: 10px;
+                    border: none;
+                    color: white;
+                    font-weight: 500;
+                    font-size: 18px;
+                    cursor: pointer;
+                    border-radius: 5px;
+                }
             }
         }
     }

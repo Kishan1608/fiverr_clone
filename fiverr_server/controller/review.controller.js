@@ -16,11 +16,11 @@ export const createReview = async(req, res, next) => {
 
         if(review) return next(createError(403, "You already created a Review for this gig."));
 
-        await Gig.findByIdAndUpdate(req.body.gigId, {
+        await Gig.findByIdAndUpdate(req.body.gigId, { 
             $inc: {totalStars: req.body.star, starNumber: 1},
         });
 
-        const savedReview = await newReview.save();
+        const savedReview = await newReview.save(); 
         res.status(201).send(savedReview);
     } catch (err) {
         next(err);

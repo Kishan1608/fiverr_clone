@@ -3,7 +3,7 @@ import './Gig.scss'
 import { useQuery } from '@tanstack/react-query';
 import ReactSimplyCarousel from 'react-simply-carousel';
 import {BsArrowLeftShort,BsArrowRightShort} from 'react-icons/bs';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import newRequest from '../../utils/newRequest';
 import Reviews from '../../components/reviews/Reviews';
 
@@ -204,7 +204,9 @@ const Gig = () => {
               )
             })}
           </div>
-          <button>Continue</button>
+          <Link to={`/pay/${id}`} className='link'>
+            <button className='btn-continue'>Continue</button>
+          </Link>
         </div>
       </div>
     }
