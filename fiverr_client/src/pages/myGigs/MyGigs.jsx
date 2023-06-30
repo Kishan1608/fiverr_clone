@@ -7,11 +7,11 @@ import newRequest from '../../utils/newRequest';
 
 const MyGigs = () => {
   const currentUser = getCurrentUser();
-
+  
   const { isLoading, error, data } = useQuery({
       queryKey: ['myGigs'],
       queryFn: () =>
-          newRequest.get(`/gigs?userId=${currentUser.id}`).then((res) => {
+          newRequest.get(`/gigs?userId=${currentUser._id}`).then((res) => {
           return res.data;
       })
   })
@@ -31,6 +31,7 @@ const MyGigs = () => {
   const handleDelete = (id) => {
     mutation.mutate(id);
   }
+  
   return (
     <div className='myGigs'>
       {isLoading ? "Loading..."
