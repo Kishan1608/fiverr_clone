@@ -14,7 +14,7 @@ import cookieParser from 'cookie-parser';
 const app = express();
 dotenv.config();
 app.use(express.json());
-app.use(cors({origin:"http://localhost:5173", credentials: true}));
+app.use(cors({origin:"https://rococo-genie-ce0722.netlify.app/", credentials: true}));
 app.use(cookieParser());
 
 const connect = async () => {
